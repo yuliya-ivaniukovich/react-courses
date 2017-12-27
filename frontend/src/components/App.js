@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import './App.css';
+import CurrencyChart from './chart/CurrencyChart';
 
 class App extends Component {
     render() {
@@ -11,8 +12,8 @@ class App extends Component {
                 <nav>
                     { /* Buttons to switch between chart and table views */ }
                 </nav>
-                <article className="currency-info">
-                    { /* In this area there will be chart or table with currency data */ }
+                <article>
+                    <CurrencyChart/>
                 </article>
                 <footer>
                     { /* Here will be components to control info view settings */ }
