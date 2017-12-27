@@ -32,4 +32,7 @@ footer {
     grid-area: footer;
     background-color: #f0f0f0;
     box-shadow: 0 -1px 7px 0 #c2c5cdbf;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
