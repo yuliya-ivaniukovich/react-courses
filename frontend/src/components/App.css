@@ -1,0 +1,38 @@
+.app {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: 10% 50px auto 50px;
+    grid-template-areas:
+        "header"
+        "nav"
+        "article"
+        "footer";
+}
+
+header {
+    grid-area: header;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #751430;
+    color: #ffffff;
+}
+
+nav {
+    grid-area: nav;
+    background-color: #751430;
+}
+
+article {
+    grid-area: article;
+}
+
+footer {
+    grid-area: footer;
+    background-color: #f0f0f0;
+    box-shadow: 0 -1px 7px 0 #c2c5cdbf;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
