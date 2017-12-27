@@ -1,18 +1,22 @@
 import React, {Component} from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
     render() {
         return (
-            <div className="App">
-                <header className="App-header">
-                    <img src={logo} className="App-logo" alt="logo"/>
-                    <h1 className="App-title">Welcome to React</h1>
+            <div className="app">
+                <header>
+                    <h2>Currency Exchange Rates</h2>
                 </header>
-                <p className="App-intro">
-                    To get started, edit <code>src/App.js</code> and save to reload.
-                </p>
+                <nav>
+                    { /* Buttons to switch between chart and table views */ }
+                </nav>
+                <article className="currency-info">
+                    { /* In this area there will be chart or table with currency data */ }
+                </article>
+                <footer>
+                    { /* Here will be components to control info view settings */ }
+                </footer>
             </div>
         );
     }
