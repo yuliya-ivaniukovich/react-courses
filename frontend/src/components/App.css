@@ -26,6 +26,17 @@ nav {
 
 article {
     grid-area: article;
+    display: flex;
+    justify-content: center;
+}
+
+article .loading, article .error {
+    align-self: center;
+    justify-self: center;
+}
+
+article .error {
+    color: #751430;
 }
 
 footer {

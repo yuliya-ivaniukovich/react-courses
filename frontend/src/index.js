@@ -4,7 +4,7 @@ import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 
 import './index.css';
-import App from './components/App';
+import App from './components/App.container';
 import rates from './redux/modules/rates';
 
 import registerServiceWorker from './registerServiceWorker';
