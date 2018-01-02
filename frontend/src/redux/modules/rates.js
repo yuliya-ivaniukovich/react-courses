@@ -1,30 +1,22 @@
-import {createAction, handleActions} from 'redux-actions';
+import {handleActions, combineActions} from 'redux-actions';
+import {createApiAction} from '../middleware/api';
 import {CurrencyRatesApi} from '../../api/CurrencyRatesApi';
+import {selectCurrency} from './filter';
 
 //- Actions
-export const selectCurrency = createAction('CURRENCY_SELECT', CurrencyRatesApi.fetchCurrencyRates, (currency) => ({currency}));
-export const fetchCurrencyRates = createAction('CURRENCY_RATES_FETCH', CurrencyRatesApi.fetchCurrencyRates);
-export const fetchSelectedCurrencyRates = () => (dispatch, getState) => dispatch(fetchCurrencyRates(getState().selectedCurrency));
+export const fetchCurrencyRates = createApiAction('CURRENCY_RATES_FETCH', CurrencyRatesApi.fetchCurrencyRates);
+export const fetchSelectedCurrencyRates = () => (dispatch, getState) => dispatch(fetchCurrencyRates(getState().filter.selectedCurrency));
 
 //- State
 const initialState = {
-    selectedCurrency: 'USD',
     ticks: null,
-    fetching: false,
     error: null
 };
 
 //- Reducers
 export default handleActions({
 
-    CURRENCY_SELECT: (state, action) => {
-        if (action.error) {
-            return {...state, error: 'Cannot fetch currency rates, try again later'};
-        }
-        return {...state, selectedCurrency: action.meta.currency, ticks: action.payload};
-    },
-
-    CURRENCY_RATES_FETCH: (state, action) => {
+    [combineActions(selectCurrency, fetchCurrencyRates)]: (state, action) => {
         if (action.error) {
             return {...state, error: 'Cannot fetch currency rates, try again later'};
         }
