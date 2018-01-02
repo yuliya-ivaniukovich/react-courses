@@ -14,10 +14,17 @@ class DropUp extends Component {
         this.close = this.close.bind(this);
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            selectedOption: nextProps.selectedOption
+        });
+    }
+
     render() {
+        let className = 'drop-up' + (this.props.disabled ? ' disabled' : '');
         let icon = this.state.open ? 'expand_more' : 'expand_less';
         return (
-            <div className="drop-up" tabIndex="-1" onBlur={this.close}>
+            <div className={className} tabIndex="-1" onBlur={this.close}>
                 <div className="selected-option" onClick={this.toggleOpen}>
                     <span>{this.state.selectedOption}</span>
                     <span className="material-icons">{icon}</span>
@@ -40,12 +47,16 @@ class DropUp extends Component {
 
     renderOption(option) {
         return (
-            <li className={option === this.state.selectedOption ? 'selected' : ''}
+            <li key={option}
+                className={option === this.state.selectedOption ? 'selected' : ''}
                 onClick={() => this.selectOption(option)}>{option}</li>
         );
     }
 
     toggleOpen() {
+        if (this.props.disabled) {
+            return;
+        }
         this.setState({ open: !this.state.open });
     }
 
@@ -54,8 +65,10 @@ class DropUp extends Component {
     }
 
     selectOption(option) {
+        if (this.props.disabled) {
+            return;
+        }
         this.setState({
-            selectedOption: option,
             open: false
         });
         this.props.onSelect(option);
@@ -65,6 +78,7 @@ class DropUp extends Component {
 DropUp.propTypes = {
     options: PropTypes.arrayOf(PropTypes.string).isRequired,
     selectedOption: PropTypes.string,
+    disabled: PropTypes.bool.isRequired,
     onSelect: PropTypes.func.isRequired
 };
 

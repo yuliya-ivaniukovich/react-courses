@@ -32,10 +32,6 @@ class CurrencyChart extends Component {
             this.props.onLoad();
         }
     }
-
-    componentDidUpdate() {
-        this.componentDidMount();
-    }
 }
 
 CurrencyChart.propTypes = {

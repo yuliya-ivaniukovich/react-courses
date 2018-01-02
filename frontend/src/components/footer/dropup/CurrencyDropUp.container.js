@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import {CURRENCY_SELECT} from '../../../redux/modules/rates';
+import {CURRENCY_SELECT, fetchCurrencyRates} from '../../../redux/modules/rates';
 import DropUp from './DropUp';
 
 const currencies = ['USD', 'EUR', 'RUB'];
@@ -7,14 +7,17 @@ const currencies = ['USD', 'EUR', 'RUB'];
 const mapStateToProps = state => {
     return {
         options: currencies,
-        selectedOption: state.selectedCurrency
+        selectedOption: state.selectedCurrency,
+        disabled: state.fetching
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
         onSelect: (currency) => {
-            dispatch({ type: CURRENCY_SELECT, payload: currency });
+            dispatch(fetchCurrencyRates(currency, () => {
+                dispatch({ type: CURRENCY_SELECT, payload: currency });
+            }));
         }
     };
 };

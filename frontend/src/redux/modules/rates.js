@@ -6,14 +6,23 @@ export const CURRENCY_RATES_FETCH = 'CURRENCY_RATES_FETCH';
 export const CURRENCY_RATES_FETCH_COMPLETE = 'CURRENCY_RATES_FETCH_COMPLETE';
 export const CURRENCY_RATES_FETCH_ERROR = 'CURRENCY_RATES_FETCH_ERROR';
 
-export const fetchCurrencyRates = (dispatch, getState) => {
-    let currency = getState().selectedCurrency;
+export const fetchCurrencyRates = (currency, onComplete) => (dispatch, getState) => {
+    if (!currency) {
+        currency = getState().selectedCurrency;
+    }
 
     dispatch({ type: CURRENCY_RATES_FETCH });
-    CurrencyRatesApi.fetchCurrencyRates(currency)
-        .then(response => response.json())
-        .then(ticks => dispatch({ type: CURRENCY_RATES_FETCH_COMPLETE, payload: ticks }))
-        .catch(() => dispatch({ type: CURRENCY_RATES_FETCH_ERROR, payload: 'Cannot fetch currency rates, try again later' }));
+    setTimeout(() => {                                       // Add timeout to simulate long response
+        CurrencyRatesApi.fetchCurrencyRates(currency)
+            .then(response => response.json())
+            .then(ticks => {
+                dispatch({ type: CURRENCY_RATES_FETCH_COMPLETE, payload: ticks });
+                if (onComplete) {
+                    onComplete();
+                }
+            })
+            .catch(() => dispatch({ type: CURRENCY_RATES_FETCH_ERROR, payload: 'Cannot fetch currency rates, try again later' }));
+    }, 300);
 };
 
 //- State
@@ -28,7 +37,7 @@ const initialState = {
 export default (state = initialState, action) => {
     switch (action.type) {
         case CURRENCY_SELECT:
-            return {...state, selectedCurrency: action.payload, ticks: null};
+            return {...state, selectedCurrency: action.payload};
 
         case CURRENCY_RATES_FETCH:
             return {...state, fetching: true};

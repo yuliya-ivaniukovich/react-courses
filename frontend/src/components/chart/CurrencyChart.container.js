@@ -26,7 +26,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         onLoad: () => {
-            dispatch(fetchCurrencyRates)
+            dispatch(fetchCurrencyRates())
         }
     };
 };

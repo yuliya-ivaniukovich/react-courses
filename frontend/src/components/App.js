@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import './App.css';
 import CurrencyChart from './chart/CurrencyChart.container';
 import CurrencyDropUp from './footer/dropup/CurrencyDropUp.container';
+
+import spinner from './spinner.svg';
+import './App.css';
 
 class App extends Component {
     render() {
@@ -16,6 +18,7 @@ class App extends Component {
                 </nav>
                 <article>
                     {this.renderArticle()}
+                    {this.renderSpinner()}
                 </article>
                 <footer>
                     <CurrencyDropUp/>
@@ -24,10 +27,19 @@ class App extends Component {
         );
     }
 
+    renderSpinner() {
+        if (!this.props.fetching) {
+            return null;
+        }
+        return (
+            <div className="loading">
+                <img src={spinner} alt="Loading"/>
+            </div>
+        );
+    }
+
     renderArticle() {
-        if (this.props.fetching) {
-            return <div className="loading">Loading...</div>;
-        } else if (this.props.error) {
+        if (this.props.error) {
             console.log(this.props.error);
             return <div className="error">{this.props.error}</div>;
         } else {
