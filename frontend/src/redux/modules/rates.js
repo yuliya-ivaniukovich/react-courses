@@ -12,17 +12,15 @@ export const fetchCurrencyRates = (currency, onComplete) => (dispatch, getState)
     }
 
     dispatch({ type: CURRENCY_RATES_FETCH });
-    setTimeout(() => {                                       // Add timeout to simulate long response
-        CurrencyRatesApi.fetchCurrencyRates(currency)
-            .then(response => response.json())
-            .then(ticks => {
-                dispatch({ type: CURRENCY_RATES_FETCH_COMPLETE, payload: ticks });
-                if (onComplete) {
-                    onComplete();
-                }
-            })
-            .catch(() => dispatch({ type: CURRENCY_RATES_FETCH_ERROR, payload: 'Cannot fetch currency rates, try again later' }));
-    }, 300);
+    CurrencyRatesApi.fetchCurrencyRates(currency)
+        .then(response => response.json())
+        .then(ticks => {
+            dispatch({ type: CURRENCY_RATES_FETCH_COMPLETE, payload: ticks });
+            if (onComplete) {
+                onComplete();
+            }
+        })
+        .catch(() => dispatch({ type: CURRENCY_RATES_FETCH_ERROR, payload: 'Cannot fetch currency rates, try again later' }));
 };
 
 //- State

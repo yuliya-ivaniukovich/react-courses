@@ -9,9 +9,14 @@ class DropUp extends Component {
             selectedOption: props.selectedOption,
             open: false
         };
+        this.setDropUpElement = this.setDropUpElement.bind(this);
         this.renderOption = this.renderOption.bind(this);
         this.toggleOpen = this.toggleOpen.bind(this);
         this.close = this.close.bind(this);
+    }
+
+    setDropUpElement(dropUpElement) {
+        this.dropUpElement = dropUpElement;
     }
 
     componentWillReceiveProps(nextProps) {
@@ -24,7 +29,7 @@ class DropUp extends Component {
         let className = 'drop-up' + (this.props.disabled ? ' disabled' : '');
         let icon = this.state.open ? 'expand_more' : 'expand_less';
         return (
-            <div className={className} tabIndex="-1" onBlur={this.close}>
+            <div className={className} tabIndex="-1" onBlur={this.close} ref={this.setDropUpElement}>
                 <div className="selected-option" onClick={this.toggleOpen}>
                     <span>{this.state.selectedOption}</span>
                     <span className="material-icons">{icon}</span>
@@ -53,6 +58,12 @@ class DropUp extends Component {
         );
     }
 
+    componentDidUpdate() {
+        if (!this.state.open) {
+            this.dropUpElement.blur();
+        }
+    }
+
     toggleOpen() {
         if (this.props.disabled) {
             return;
@@ -61,7 +72,9 @@ class DropUp extends Component {
     }
 
     close() {
-        this.setState({ open: false });
+        if (this.state.open) {
+            this.setState({open: false});
+        }
     }
 
     selectOption(option) {
