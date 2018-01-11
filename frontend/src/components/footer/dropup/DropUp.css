@@ -7,6 +7,10 @@
     outline: none;
 }
 
+.drop-up.disabled {
+    color: #707070;
+}
+
 .drop-up .selected-option {
     display: flex;
     align-items: center;

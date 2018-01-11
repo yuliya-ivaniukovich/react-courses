@@ -3,8 +3,8 @@ import App from './App';
 
 const mapStateToProps = state => {
     return {
-        fetching: state.fetching,
-        error: state.error
+        fetching: state.api.fetching,
+        error: state.rates.error
     };
 };
 
