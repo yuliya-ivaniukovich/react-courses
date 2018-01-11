@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import CurrencyChart from './CurrencyChart';
-import {fetchCurrencyRates} from '../../redux/modules/rates';
+import {fetchSelectedCurrencyRates} from '../../redux/modules/rates';
 
 const mapStateToProps = state => {
     let currency = state.selectedCurrency;
@@ -26,7 +26,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         onLoad: () => {
-            dispatch(fetchCurrencyRates())
+            dispatch(fetchSelectedCurrencyRates())
         }
     };
 };

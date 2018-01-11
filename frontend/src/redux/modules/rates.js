@@ -1,27 +1,10 @@
-//- Actions
+import {createAction, handleActions} from 'redux-actions';
 import {CurrencyRatesApi} from '../../api/CurrencyRatesApi';
 
-export const CURRENCY_SELECT = 'CURRENCY_SELECT';
-export const CURRENCY_RATES_FETCH = 'CURRENCY_RATES_FETCH';
-export const CURRENCY_RATES_FETCH_COMPLETE = 'CURRENCY_RATES_FETCH_COMPLETE';
-export const CURRENCY_RATES_FETCH_ERROR = 'CURRENCY_RATES_FETCH_ERROR';
-
-export const fetchCurrencyRates = (currency, onComplete) => (dispatch, getState) => {
-    if (!currency) {
-        currency = getState().selectedCurrency;
-    }
-
-    dispatch({ type: CURRENCY_RATES_FETCH });
-    CurrencyRatesApi.fetchCurrencyRates(currency)
-        .then(response => response.json())
-        .then(ticks => {
-            dispatch({ type: CURRENCY_RATES_FETCH_COMPLETE, payload: ticks });
-            if (onComplete) {
-                onComplete();
-            }
-        })
-        .catch(() => dispatch({ type: CURRENCY_RATES_FETCH_ERROR, payload: 'Cannot fetch currency rates, try again later' }));
-};
+//- Actions
+export const selectCurrency = createAction('CURRENCY_SELECT', CurrencyRatesApi.fetchCurrencyRates, (currency) => ({currency}));
+export const fetchCurrencyRates = createAction('CURRENCY_RATES_FETCH', CurrencyRatesApi.fetchCurrencyRates);
+export const fetchSelectedCurrencyRates = () => (dispatch, getState) => dispatch(fetchCurrencyRates(getState().selectedCurrency));
 
 //- State
 const initialState = {
@@ -32,21 +15,20 @@ const initialState = {
 };
 
 //- Reducers
-export default (state = initialState, action) => {
-    switch (action.type) {
-        case CURRENCY_SELECT:
-            return {...state, selectedCurrency: action.payload};
+export default handleActions({
 
-        case CURRENCY_RATES_FETCH:
-            return {...state, fetching: true};
+    CURRENCY_SELECT: (state, action) => {
+        if (action.error) {
+            return {...state, error: 'Cannot fetch currency rates, try again later'};
+        }
+        return {...state, selectedCurrency: action.meta.currency, ticks: action.payload};
+    },
 
-        case CURRENCY_RATES_FETCH_COMPLETE:
-            return {...state, fetching: false, ticks: action.payload};
-
-        case CURRENCY_RATES_FETCH_ERROR:
-            return {...state, fetching: false, error: action.payload};
-
-        default:
-            return state;
+    CURRENCY_RATES_FETCH: (state, action) => {
+        if (action.error) {
+            return {...state, error: 'Cannot fetch currency rates, try again later'};
+        }
+        return {...state, ticks: action.payload};
     }
-};
+
+}, initialState);
