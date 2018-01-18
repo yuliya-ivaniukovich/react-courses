@@ -2,6 +2,18 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  "main": "public/electron.js",
+  "homepage": "./",
+  "build": {
+    "appId": "courses.demo",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "output": "electron-build"
+    }
+  },
   "dependencies": {
     "chart.js": "^2.7.1",
     "prop-types": "^15.6.0",
@@ -16,9 +28,14 @@
     "redux-thunk": "^2.2.0"
   },
   "scripts": {
+    "electron-pack": "react-scripts build && build --em.main=build/electron.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "electron": "^1.7.10",
+    "electron-builder": "^19.53.6"
   }
 }
