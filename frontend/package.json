@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "CurrencyExchangeRates",
   "version": "0.1.0",
   "private": true,
   "main": "public/electron.js",
@@ -28,6 +28,7 @@
     "redux-thunk": "^2.2.0"
   },
   "scripts": {
+    "electron-start": "electron .",
     "electron-pack": "react-scripts build && build --em.main=build/electron.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
