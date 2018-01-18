@@ -5,10 +5,14 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var currencyCSV = require('./src/service/CurrencyCSV')
+var fs = require('fs');
 
 var app = express();
 
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+var faviconPath = path.join(__dirname, 'public', 'favicon.ico');
+if (fs.existsSync(faviconPath)) {
+    app.use(favicon(faviconPath));
+}
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
