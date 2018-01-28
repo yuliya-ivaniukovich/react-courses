@@ -21,7 +21,12 @@ class App extends Component {
                     {this.renderSpinner()}
                 </article>
                 <footer>
-                    <CurrencyDropUp/>
+                    <div>
+                        <CurrencyDropUp/>
+                        <a href={"/api/csv?currency=USD&currency=EUR&currency=RUB&dateFrom=2017-01-01&dateTo=2017-01-07"}>
+                            <span className="material-icons">file_download</span>Export
+                        </a>
+                    </div>
                 </footer>
             </div>
         );

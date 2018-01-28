@@ -38,5 +38,10 @@
   "devDependencies": {
     "electron": "^1.7.10",
     "electron-builder": "^19.53.6"
+  },
+  "proxy": {
+    "/api": {
+      "target": "http://localhost:3001"
+    }
   }
 }

@@ -1,35 +1,44 @@
 var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var currencyCSV = require('./src/service/CurrencyCSV')
+var currencyCSV = require('./src/service/currency');
 
 var app = express();
 
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 
-app.use('/csv', function (req, res, next) {
-    var currency = req.query.currency;
+app.use('/api/csv', function (req, res, next) {
+    var currencies = req.query.currency;
     var dateFrom = req.query.dateFrom;
     var dateTo = req.query.dateTo;
-    if (currency && dateFrom && dateTo) {
-        currencyCSV.ReturnCurrencyCSV(res, currency, dateFrom, dateTo);
+    if (currencies && dateFrom && dateTo) {
+        if (!Array.isArray(currencies)) {
+            currencies = [currencies];
+        }
+
+        currencyCSV.getCurrencyRatesCSV(currencies, dateFrom, dateTo)
+            .then(function (csv) {
+                res.set ({
+                    'Content-Type': 'text/csv',
+                    'Content-Disposition': 'attachment; filename="data.csv"'
+                });
+                res.send(csv)
+            })
+            .catch(function(error) {
+                res.json({'error': error});
+            });
     }
     else {
-        res.json({'Result': 'Invalid request params'});
+        res.json({'error': 'Invalid request params'});
     }
 });
 
-app.use('/', express.static(path.join(__dirname, 'public')));
-
-
-
+// Serve static content if needed
+// app.use('/', express.static(path.join(__dirname, 'public')));
 
 module.exports = app;
