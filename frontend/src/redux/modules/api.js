@@ -1,7 +1,7 @@
 import {createAction, handleActions} from 'redux-actions';
 
 //- Actions
-export const updateApiFetching = createAction('API_FETCHING_UPDATE', fetching => fetching);
+export const updateApiFetching = createAction('API_FETCHING_UPDATE');
 
 //- State
 const initialState = {
@@ -10,10 +10,8 @@ const initialState = {
 
 //- Reducers
 export default handleActions({
-
     API_FETCHING_UPDATE: (state, action) => {
-        return { fetching: action.payload };
+        return {fetching: action.payload};
     }
-
 }, initialState);
 

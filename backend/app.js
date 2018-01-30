@@ -2,17 +2,16 @@ var express = require('express');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var currencyCSV = require('./src/service/currency');
+var currency = require('./src/service/currency');
 
 var app = express();
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 
-
-app.use('/api/csv', function (req, res, next) {
+app.use('/api/csv', function(req, res, next) {
     var currencies = req.query.currency;
     var dateFrom = req.query.dateFrom;
     var dateTo = req.query.dateTo;
@@ -21,9 +20,9 @@ app.use('/api/csv', function (req, res, next) {
             currencies = [currencies];
         }
 
-        currencyCSV.getCurrencyRatesCSV(currencies, dateFrom, dateTo)
-            .then(function (csv) {
-                res.set ({
+        currency.getCurrencyRatesCSV(currencies, dateFrom, dateTo)
+            .then(function(csv) {
+                res.set({
                     'Content-Type': 'text/csv',
                     'Content-Disposition': 'attachment; filename="data.csv"'
                 });
@@ -34,6 +33,26 @@ app.use('/api/csv', function (req, res, next) {
             });
     }
     else {
+        res.json({'error': 'Invalid request params'});
+    }
+});
+
+app.get('/api/rates', function(req, res) {
+    var code = req.query.code;
+    var start = req.query.start;
+    var finish = req.query.finish;
+    if (code && start && finish) {
+        currency.getRates(code, start, finish)
+            .then(function(data) {
+                res.status(200);
+                res.json(data)
+            })
+            .catch(function(error) {
+                res.type('text/plain');
+                res.status(500);
+                res.send(error);
+            });
+    } else {
         res.json({'error': 'Invalid request params'});
     }
 });

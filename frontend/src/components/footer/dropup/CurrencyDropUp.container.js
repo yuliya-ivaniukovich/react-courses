@@ -1,4 +1,4 @@
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import {selectCurrency} from '../../../redux/modules/filter';
 import DropUp from './DropUp';
 
@@ -7,8 +7,7 @@ const currencies = ['USD', 'EUR', 'RUB'];
 const mapStateToProps = state => {
     return {
         options: currencies,
-        selectedOption: state.filter.selectedCurrency,
-        disabled: state.api.fetching
+        selectedOption: state.filter.selectedCurrency
     };
 };
 
