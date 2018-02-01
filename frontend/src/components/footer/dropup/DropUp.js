@@ -26,10 +26,9 @@ class DropUp extends Component {
     }
 
     render() {
-        let className = 'drop-up' + (this.props.disabled ? ' disabled' : '');
         let icon = this.state.open ? 'expand_more' : 'expand_less';
         return (
-            <div className={className} tabIndex="-1" onBlur={this.close} ref={this.setDropUpElement}>
+            <div className="drop-up" tabIndex="-1" onBlur={this.close} ref={this.setDropUpElement}>
                 <div className="selected-option" onClick={this.toggleOpen}>
                     <span>{this.state.selectedOption}</span>
                     <span className="material-icons">{icon}</span>
@@ -65,10 +64,7 @@ class DropUp extends Component {
     }
 
     toggleOpen() {
-        if (this.props.disabled) {
-            return;
-        }
-        this.setState({ open: !this.state.open });
+        this.setState({open: !this.state.open});
     }
 
     close() {
@@ -78,9 +74,6 @@ class DropUp extends Component {
     }
 
     selectOption(option) {
-        if (this.props.disabled) {
-            return;
-        }
         this.setState({
             open: false
         });
@@ -91,7 +84,6 @@ class DropUp extends Component {
 DropUp.propTypes = {
     options: PropTypes.arrayOf(PropTypes.string).isRequired,
     selectedOption: PropTypes.string,
-    disabled: PropTypes.bool.isRequired,
     onSelect: PropTypes.func.isRequired
 };
 
