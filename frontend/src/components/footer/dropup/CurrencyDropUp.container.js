@@ -4,14 +4,14 @@ import DropUp from './DropUp';
 
 const currencies = ['USD', 'EUR', 'RUB'];
 
-const mapStateToProps = state => {
+export const mapStateToProps = state => {
     return {
         options: currencies,
         selectedOption: state.selectedCurrency
     };
 };
 
-const mapDispatchToProps = dispatch => {
+export const mapDispatchToProps = dispatch => {
     return {
         onSelect: (currency) => {
             dispatch({ type: CURRENCY_SELECT, payload: currency });
