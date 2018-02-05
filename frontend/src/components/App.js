@@ -1,10 +1,13 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import WsStatus from './status/WsStatus.container';
 import CurrencyChart from './chart/CurrencyChart.container';
 import CurrencyDropUp from './footer/dropup/CurrencyDropUp.container';
+import ExportButton from './footer/export/ExportButton.container';
 
 import spinner from './spinner.svg';
 import './App.css';
+import ProgressBar from './footer/progress/ProgressBar.container';
 
 class App extends Component {
     render() {
@@ -19,13 +22,13 @@ class App extends Component {
                 <article>
                     {this.renderArticle()}
                     {this.renderSpinner()}
+                    <WsStatus />
+                    <ProgressBar/>
                 </article>
                 <footer>
                     <div>
                         <CurrencyDropUp/>
-                        <a href={"/api/csv?currency=USD&currency=EUR&currency=RUB&dateFrom=2017-01-01&dateTo=2017-01-07"}>
-                            <span className="material-icons">file_download</span>Export
-                        </a>
+                        <ExportButton/>
                     </div>
                 </footer>
             </div>

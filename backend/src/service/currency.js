@@ -1,6 +1,7 @@
 var fetch = require('node-fetch');
+var Promise = require('promise');
 var moment = require('moment');
-var http = require('http');
+var sendMessage = require('../wsServer').sendMessage;
 
 const CURRENCIES = {
     'USD': 145,
@@ -8,32 +9,13 @@ const CURRENCIES = {
     'RUB': 298
 };
 
-const TIMEOUT = 20000;
+const TIMEOUTS = {
+    'USD': 1000,
+    'EUR': 3000,
+    'RUB': 10000
+};
 
-function getRates(code, start, finish) {
-    return new Promise(function(res) {
-        code == CURRENCIES.RUB ? setTimeout(res, TIMEOUT) : res();
-    })
-        .then(function() {
-			return new Promise(function (resolve, reject) {
-                http.get(`http://www.nbrb.by/API/ExRates/Rates/Dynamics/${code}?startDate=${start}&endDate=${finish}`, function(res) {
-                    let output = '';
-                    res.setEncoding('utf8');
-                    res.on('data', function(chunk) {
-                        output += chunk;
-                    });
-                    res.on('end', function() {
-                        let obj = JSON.parse(output);
-                        resolve(obj);
-                    });
-                }).on('error', function(err) {
-                    reject(err);
-                });
-			});
-        });
-}
-
-function getCurrencyRates(currency, dateFrom, dateTo) {
+function getRates(currency, dateFrom, dateTo) {
     var code = CURRENCIES[currency];
     if (code == null) {
         return new Promise(function(resolve, reject) {
@@ -41,29 +23,42 @@ function getCurrencyRates(currency, dateFrom, dateTo) {
         })
     }
 
-    return fetch('http://www.nbrb.by/API/ExRates/Rates/Dynamics/' + code + '?startDate=' + dateFrom + '&endDate=' + dateTo)
-        .then(function(response) {
-            return response.json();
-        })
-        .then(function(rates) {
+    return new Promise(function(resolve) {
+        // Just for sample slow down rates loading
+        setTimeout(resolve, TIMEOUTS[currency]);
+    })
+    .then(function() {
+        return fetch('http://www.nbrb.by/API/ExRates/Rates/Dynamics/' + code + '?startDate=' + dateFrom + '&endDate=' + dateTo)
+            .then(function(response) {
+                return response.json();
+            });
+    });
+}
+
+function getCurrencyRatesCSV(currencies, dateFrom, dateTo, clientId) {
+    var total = currencies.length;
+    var done = 0;
+    sendProgress(clientId, done, total);
+
+    var promises = [];
+    currencies.forEach(function(currency) {
+        promises.push(getRates(currency, dateFrom, dateTo).then(function(rates) {
+            done++;
+            sendProgress(clientId, done, total);
+
             var data = {};
             rates.forEach(function(rate) {
                 data[rate.Date.split('T')[0]] = rate.Cur_OfficialRate;
             });
             return data;
-        });
-}
-
-function getCurrencyRatesCSV(currencies, dateFrom, dateTo) {
-    var dates = generateDatesRange(dateFrom, dateTo);
-
-    var promises = [];
-    currencies.forEach(function(currency) {
-        promises.push(getCurrencyRates(currency, dateFrom, dateTo));
+        }));
     });
 
     return Promise.all(promises).then(function(results) {
+        sendProgress(clientId, null, null);
+
         var csv = 'Date,' + currencies.join(',') + '\n';
+        var dates = generateDatesRange(dateFrom, dateTo);
         dates.forEach(function(date) {
             csv += date + ',' + results.map(function(result) {
                     return result[date]
@@ -88,6 +83,16 @@ function generateDatesRange(dateFrom, dateTo) {
         from.add(1, 'days');
     }
     return range;
+}
+
+function sendProgress(clientId, done, total) {
+    sendMessage(clientId, {
+        type: 'progress',
+        payload: {
+            done: done,
+            total: total
+        }
+    });
 }
 
 module.exports = {

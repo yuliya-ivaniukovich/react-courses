@@ -7,10 +7,13 @@ import {createEpicMiddleware} from 'redux-observable';
 import './index.css';
 import App from './components/App.container';
 import {rootEpic, rootReducer} from './redux/modules';
+import {connect as wsConnect} from './redux/modules/ws';
 
 import registerServiceWorker from './registerServiceWorker';
 
 let store = createStore(rootReducer, applyMiddleware(createEpicMiddleware(rootEpic)));
+
+wsConnect(store);
 
 ReactDOM.render(
     <Provider store={store}>
