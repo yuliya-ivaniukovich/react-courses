@@ -40,7 +40,7 @@ class DropUp extends Component {
 
     renderOption(option) {
         return (
-            <li className={option === this.state.selectedOption ? 'selected' : ''}
+            <li key={option} className={option === this.state.selectedOption ? 'selected' : ''}
                 onClick={() => this.selectOption(option)}>{option}</li>
         );
     }
