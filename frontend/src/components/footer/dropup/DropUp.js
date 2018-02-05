@@ -9,15 +9,27 @@ class DropUp extends Component {
             selectedOption: props.selectedOption,
             open: false
         };
+        this.setDropUpElement = this.setDropUpElement.bind(this);
         this.renderOption = this.renderOption.bind(this);
         this.toggleOpen = this.toggleOpen.bind(this);
         this.close = this.close.bind(this);
     }
 
+    setDropUpElement(dropUpElement) {
+        this.dropUpElement = dropUpElement;
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            selectedOption: nextProps.selectedOption
+        });
+    }
+
     render() {
+        let className = 'drop-up' + (this.props.disabled ? ' disabled' : '');
         let icon = this.state.open ? 'expand_more' : 'expand_less';
         return (
-            <div className="drop-up" tabIndex="-1" onBlur={this.close}>
+            <div className={className} tabIndex="-1" onBlur={this.close} ref={this.setDropUpElement}>
                 <div className="selected-option" onClick={this.toggleOpen}>
                     <span>{this.state.selectedOption}</span>
                     <span className="material-icons">{icon}</span>
@@ -40,22 +52,36 @@ class DropUp extends Component {
 
     renderOption(option) {
         return (
-            <li key={option} className={option === this.state.selectedOption ? 'selected' : ''}
+            <li key={option}
+                className={option === this.state.selectedOption ? 'selected' : ''}
                 onClick={() => this.selectOption(option)}>{option}</li>
         );
     }
 
+    componentDidUpdate() {
+        if (!this.state.open) {
+            this.dropUpElement.blur();
+        }
+    }
+
     toggleOpen() {
+        if (this.props.disabled) {
+            return;
+        }
         this.setState({ open: !this.state.open });
     }
 
     close() {
-        this.setState({ open: false });
+        if (this.state.open) {
+            this.setState({open: false});
+        }
     }
 
     selectOption(option) {
+        if (this.props.disabled) {
+            return;
+        }
         this.setState({
-            selectedOption: option,
             open: false
         });
         this.props.onSelect(option);
@@ -65,6 +91,7 @@ class DropUp extends Component {
 DropUp.propTypes = {
     options: PropTypes.arrayOf(PropTypes.string).isRequired,
     selectedOption: PropTypes.string,
+    disabled: PropTypes.bool.isRequired,
     onSelect: PropTypes.func.isRequired
 };
 

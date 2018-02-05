@@ -29,12 +29,8 @@ class CurrencyChart extends Component {
     // See https://daveceddia.com/where-fetch-data-componentwillmount-vs-componentdidmount/
     componentDidMount() {
         if (!this.props.rates) {
-            this.props.onLoad(this.props.currency);
+            this.props.onLoad();
         }
-    }
-
-    componentDidUpdate() {
-        this.componentDidMount();
     }
 }
 
