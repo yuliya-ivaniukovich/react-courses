@@ -5,6 +5,9 @@ import './CurrencyChart.css';
 
 class CurrencyChart extends Component {
     render() {
+        if (!this.props.rates) {
+            return null;
+        }
         let data = {
             labels: this.props.dates,
             datasets: [{
@@ -22,12 +25,24 @@ class CurrencyChart extends Component {
             </div>
         );
     }
+
+    // See https://daveceddia.com/where-fetch-data-componentwillmount-vs-componentdidmount/
+    componentDidMount() {
+        if (!this.props.rates) {
+            this.props.onLoad(this.props.currency);
+        }
+    }
+
+    componentDidUpdate() {
+        this.componentDidMount();
+    }
 }
 
 CurrencyChart.propTypes = {
     currency: PropTypes.string.isRequired,
-    dates: PropTypes.arrayOf(PropTypes.string).isRequired,
-    rates: PropTypes.arrayOf(PropTypes.number).isRequired
+    dates: PropTypes.arrayOf(PropTypes.string),
+    rates: PropTypes.arrayOf(PropTypes.number),
+    onLoad: PropTypes.func.isRequired
 };
 
 export default CurrencyChart;
