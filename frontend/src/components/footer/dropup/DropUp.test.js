@@ -6,7 +6,8 @@ describe('DropUp component', () => {
     const props = {
         options: ['USD', 'EUR', 'RUB'],
         onSelect: jest.fn(),
-        selectedOption: 'USD'
+        selectedOption: 'USD',
+        disabled: false
     };
     let dropUpWrapper;
 

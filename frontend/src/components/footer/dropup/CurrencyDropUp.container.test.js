@@ -5,15 +5,18 @@ describe("Currency drop up container", () => {
     it('mapStateToProps should return props', () => {
         // create state as mock for redux store
         const state = {
-            selectedCurrency: 'RUB',
-            ticks: null,
-            fetching: false,
-            error: null
+            filter: {
+                selectedCurrency: 'RUB',
+            },
+            api: {
+                fetching: false,
+            }
         };
         // check that mapStateToProps returns expected props
         expect(mapStateToProps(state)).toEqual({
             options: ['USD', 'EUR', 'RUB'],
-            selectedOption: 'RUB'
+            selectedOption: 'RUB',
+            disabled: false
         })
     });
 
