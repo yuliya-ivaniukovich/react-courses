@@ -1,3 +1,5 @@
+export const API_HOST = 'localhost:3001';
+
 const CURRENCIES = {
     'USD': 145,
     'EUR': 292,
@@ -10,7 +12,7 @@ export class CurrencyRatesApi {
         let startDate = '2017-01-01';
         let endDate = '2017-01-07';
         //return fetch(`http://www.nbrb.by/API/ExRates/Rates/Dynamics/${code}?startDate=${startDate}&endDate=${endDate}`); // real nbrb server
-        return fetch(`/api/rates/?currency=${currencySymbol}&dateFrom=${startDate}&dateTo=${endDate}`); // proxy server to show advantages of RxJS switchMap in compare with Promises
+        return fetch(`http://${API_HOST}/api/rates/?currency=${currencySymbol}&dateFrom=${startDate}&dateTo=${endDate}`); // proxy server to show advantages of RxJS switchMap in compare with Promises
     }
 }
 

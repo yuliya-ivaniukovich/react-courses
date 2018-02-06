@@ -1,5 +1,6 @@
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Subject} from 'rxjs/Subject';
+import {API_HOST} from '../api/CurrencyRatesApi';
 
 const RECONNECT_INTERVAL = 1000;
 const ATTEMPTS_LIMIT = 5;
@@ -19,7 +20,7 @@ class WebSocketService {
             this.id = id;
             this.connectionStatus.next({ isConnected: false, isReconnecting: true });
 
-            this.socket = new WebSocket('ws://' + window.location.hostname + ':3001/' + id);
+            this.socket = new WebSocket(`ws://${API_HOST}/${id}`);
             this.socket.onopen = this.handleConnectionOpen;
             this.socket.onclose = this.handleConnectionClose;
             this.socket.onmessage = this.dispatchMessageToSubscriber;
