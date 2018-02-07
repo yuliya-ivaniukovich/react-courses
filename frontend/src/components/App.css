@@ -26,6 +26,31 @@ nav {
 
 article {
     grid-area: article;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+article .loading {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+article .error {
+    align-self: center;
+    justify-self: center;
+}
+
+article .error {
+    color: #751430;
 }
 
 footer {
@@ -35,4 +60,5 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1;
 }
